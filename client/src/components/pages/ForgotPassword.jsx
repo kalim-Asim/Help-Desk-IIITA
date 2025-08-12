@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     setLoading(true);
     
     try {
-      const res = await fetch(`${apiUrl}/api/forgot-password`, {
+      const res = await fetch(`${apiUrl}/api/users/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -15,6 +15,7 @@ connectSocket(server);
 dotenv.config();
 
 app.use(cors({
+  // origin: "http://localhost:5173",
   origin: "https://help-desk-iiita.vercel.app",
 }));
 
@@ -22,8 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use('/api', userRoutes);
-app.use("/api", complaintRoutes);
+app.use('/api/users', userRoutes);
+app.use("/api/complaints", complaintRoutes);
 app.use("/api/personnel", personnelRoutes);
 app.use("/api/chat", chatRoutes);
 

@@ -34,7 +34,7 @@ const UserDashboard = () => {
     };
 
     try {
-      const res = await fetch(`${apiUrl}/api/feedback`, {
+      const res = await fetch(`${apiUrl}/api/users/feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

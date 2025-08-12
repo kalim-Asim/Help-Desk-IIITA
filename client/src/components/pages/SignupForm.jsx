@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useNotify from "../../hooks/useNotify";
 import FloatingIcons from "../ui/FloatingIcons";
-import Particles from "../ui/Particles";
-  
+
 const SignupForm = () => {
   const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
@@ -16,7 +15,7 @@ const SignupForm = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${apiUrl}/api/signup`, {
+      const res = await fetch(`${apiUrl}/api/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

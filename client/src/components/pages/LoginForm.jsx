@@ -12,7 +12,7 @@ const LoginForm = ({onLogin}) => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${apiUrl}/api/login`, {
+      const res = await fetch(`${apiUrl}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
