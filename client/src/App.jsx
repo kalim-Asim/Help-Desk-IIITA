@@ -17,16 +17,20 @@ const App = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setIsLoggedIn(true);
-        setIsAdmin(decoded.isAdmin === true);
+        const currentTime = Date.now() / 1000; // seconds
+        if (decoded.exp && decoded.exp > currentTime) {
+          setIsLoggedIn(true);
+          setIsAdmin(decoded.isAdmin === true);
+        } else {
+          localStorage.removeItem("token");
+        }
       } catch (err) {
         console.error("Invalid token", err);
         localStorage.removeItem("token");
       }
     }
   }, []);
-
-
+  
   const handleLogin = async (email, password) => {
     try {
       const response = await fetch(`${apiUrl}/api/users/login`, {
