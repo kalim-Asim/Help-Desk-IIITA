@@ -37,7 +37,6 @@ const connectSocket = (server) => {
     });
 
      socket.on("userMessage", ({ userId, message }) => {
-      // ...existing code...
       emitUserListToAdmins(); // update admin user list
     });
 

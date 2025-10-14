@@ -7,7 +7,6 @@ const {
   markFeedbackGiven
 } = require('../models/userModel');
 const db = require('../config/db');
-
 const crypto = require("crypto");
 const {sendForgotPasswordMail} = require("../utils/mailer");
 const jwt = require('jsonwebtoken');
@@ -215,7 +214,6 @@ const ForgotPassword = (req, res) => {
     resetTokens[token] = { email, expiresAt };
 
     const resetLink = `http://localhost:5173/reset-password/${token}`;
-    console.log(resetLink);
 
     sendForgotPasswordMail(email, result[0].name, resetLink)
       .then(res.json({

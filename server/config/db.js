@@ -118,6 +118,51 @@ function initializeTables() {
       }
     });
   });
+
+  const indexQueries = [
+    { name: 'idx_complaints_status', query: 'CREATE INDEX idx_complaints_status ON complaints(status)' },
+    { name: 'idx_complaints_priority', query: 'CREATE INDEX idx_complaints_priority ON complaints(priority)' },
+    { name: 'idx_complaints_user', query: 'CREATE INDEX idx_complaints_user ON complaints(user_id)' },
+    { name: 'idx_complaints_personnel', query: 'CREATE INDEX idx_complaints_personnel ON complaints(assigned_personnel_id)' },
+    { name: 'idx_complaints_type', query: 'CREATE INDEX idx_complaints_type ON complaints(complaint_type_id)' },
+    { name: 'idx_complaints_createdAt', query: 'CREATE INDEX idx_complaints_createdAt ON complaints(createdAt)' },
+    { name: 'idx_feedback_user', query: 'CREATE INDEX idx_feedback_user ON feedback(user_id)' },
+    { name: 'idx_feedback_personnel', query: 'CREATE INDEX idx_feedback_personnel ON feedback(assigned_personnel_id)' },
+    { name: 'idx_personnel_role', query: 'CREATE INDEX idx_personnel_role ON personnel(role)' },
+    { name: 'idx_personnel_available', query: 'CREATE INDEX idx_personnel_available ON personnel(available)' }
+  ];
+
+  indexQueries.forEach(({ name, query }) => {
+    const checkQuery = `
+      SELECT COUNT(1) AS count
+      FROM information_schema.statistics
+      WHERE table_schema = DATABASE()
+        AND table_name = ?
+        AND index_name = ?;
+    `;
+
+    // Derive table name dynamically from the query string
+    const tableName = query.match(/ON\s+(\w+)/i)[1];
+
+    db.query(checkQuery, [tableName, name], (err, results) => {
+      if (err) {
+        console.error(`❌ Failed to check index ${name}: ${err.message}`);
+        return;
+      }
+
+      if (results[0].count === 0) {
+        db.query(query, (err2) => {
+          if (err2) {
+            console.error(`❌ Failed to create index ${name}: ${err2.message}`);
+          } else {
+            console.log(`✅ Index ${name} created successfully.`);
+          }
+        });
+      } else {
+        console.log(`ℹ️ Index ${name} already exists, skipping.`);
+      }
+    });
+  });
 }
 
 module.exports = db;

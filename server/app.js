@@ -15,8 +15,7 @@ connectSocket(server);
 dotenv.config();
 
 app.use(cors({
-  // origin: "http://localhost:5173",
-  origin: "https://help-desk-iiita.vercel.app",
+  origin: ["http://localhost:5173", "https://help-desk-iiita.vercel.app"],
 }));
 
 app.use(express.json());
