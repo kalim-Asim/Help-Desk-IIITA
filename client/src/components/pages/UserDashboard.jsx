@@ -1,11 +1,12 @@
 const apiUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { jwtDecode } from "jwt-decode";
 import StarRating from "../../components/StarRating";
 import useNotify from "../../hooks/useNotify";
 import { Check, Star, Loader2, AlertCircle, File, MapPin, Clock, User, Calendar, ExternalLink } from "lucide-react";
 import {Close, Search} from "../../assets/Icons";
 import ChatUser from "../ChatUser";
+import { useDebounce } from "./useDebounce";
 
 const UserDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -15,7 +16,8 @@ const UserDashboard = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const { notifySuccess, notifyError } = useNotify();
-  
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
 
   const handleFeedbackSubmit = async (complaint) => {
     if (!feedback[complaint.id]?.rating) {
@@ -90,13 +92,21 @@ const UserDashboard = () => {
   }, []);
 
   // Filter complaints based on status and search term
-  const filteredComplaints = complaints.filter(complaint => {
-    const matchesStatus = filterStatus === 'all' || complaint.status.toLowerCase() === filterStatus.toLowerCase();
-    const searchMatch = searchTerm === '' || 
-      complaint.type?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      complaint.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      complaint.assigned_personnel_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+  const filteredComplaints = complaints.filter((complaint) => {
+    const matchesStatus =
+      filterStatus === "all" ||
+      complaint.status.toLowerCase() === filterStatus.toLowerCase();
+
+    const searchMatch =
+      debouncedSearchTerm === "" ||
+      complaint.type?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      complaint.location
+        ?.toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase()) ||
+      complaint.assigned_personnel_name
+        ?.toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase());
+
     return matchesStatus && searchMatch;
   });
 
